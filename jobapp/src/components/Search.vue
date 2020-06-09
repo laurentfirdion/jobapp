@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator'
+    import { Component, Emit, Vue } from 'vue-property-decorator'
 
     @Component
     export default class Search extends Vue {
@@ -18,9 +18,14 @@
 
         send() {
             if(this.job !== "" && this.city !== "") {
-                this.$emit('search', [this.job, this.city])
+                this.sendInfo([this.job, this.city])
             }
         }
+
+        @Emit('search')
+        sendInfo(queries: [string, string]) {
+            queries
+        }   
     }
 </script>
 
