@@ -4,7 +4,7 @@ export default class Job {
     url: string;
     created_at: string;
     company: string;
-    comapny_url: string;
+    company_url: string;
     location: string;
     title: string;
     description: string;

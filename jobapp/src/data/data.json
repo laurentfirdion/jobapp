@@ -1,0 +1,24 @@
+{
+    "users" : [  
+        {
+            "rgeller": {
+                "firstname" : "Ross",
+                "lastname" : "Geller"
+            }
+        },
+        {
+            "pbuffer": {
+                "firstname" : "Phoebe",
+                "lastname" : "Buffet"
+            }   
+        }
+    ],
+    "favoris" : [
+        {
+            "title": "",
+            "location" : "",
+            "company" : "",
+            "date" : ""
+        }
+    ]
+}

@@ -4,6 +4,16 @@
         <b-col col lg="3">
           <p>Recherche</p>
           <Search v-on:search="callSearch($event)" />
+
+           <div class="favoris" v-if="Object.keys(favoris).length">
+                <h2>Mes offres favoris</h2>
+                <ul>
+                  <li v-for="(favori, index) in favoris" :key="index">
+                    {{ favori.title}}  {{ favori.company}} <br/>
+                    {{ favori.location}}
+                  </li>
+                </ul>
+            </div>
         </b-col>
         <b-col col lg="9">
             <h1 v-if="titleNb >= 0">{{titleNb}} offre{{titleNb > 1 ? "s" : ""}} d'emploi aujourd'hui</h1>
@@ -20,7 +30,7 @@
               <p>dans le monde, commencez à chercher !</p>
             </div> 
             <div class="serp" v-if="Object.keys(joblist).length">
-              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" />
+              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" v-on:addfavoris="updateFavoris($event)" v-bind:favorisId="favorisArray" />
             </div>
             <div v-else>
               <p>Aucune offre pour votre recherche</p>
@@ -36,7 +46,9 @@ import Component from 'vue-class-component'
 import { AxiosResponse } from "axios"
 
 import Job from '../model/job'
+import Favoris from '@/model/favoris'
 import CallJob from '../service/calljob'
+import UserData from '@/service/user'
 import Jobitem from './Jobitem.vue'
 import Search from './Search.vue'
 import Tag from './Tag.vue'
@@ -53,6 +65,8 @@ export default class Joblist extends Vue {
   public titleNb: number = -1;
   public jobdescription: string = "";
   public location: string = "";
+  private favoris: Favoris = new Favoris;
+  private favorisArray: Array<string> = [];
     
   created() {
     const callJob: CallJob = new CallJob();
@@ -60,7 +74,26 @@ export default class Joblist extends Vue {
         this.joblist = value.data;
         this.titleNb = value.data.length;
     })
+
+    this.getFavorisData()
   } 
+
+  getFavorisData(): void {
+     const userData: UserData = new UserData();
+    userData.getFavoris().then((value: AxiosResponse<Favoris>)=> {
+       
+        if(value.data !== null) {
+           this.favoris = value.data;
+  
+            const table: any = this.favoris
+            for(const item in table) {
+              const obj: Favoris = table[item];
+              this.favorisArray.push(obj.id)
+            }
+        }
+        
+    })
+  }
 
   callSearch($event: string[]): void {
        const callJob: CallJob = new CallJob();
@@ -72,9 +105,41 @@ export default class Joblist extends Vue {
     })
   }
 
+  updateFavoris($event: Favoris): void {
+    console.log($event)
+    if(Object.keys($event).length > 0) {
+        const userData: UserData = new UserData();
+        userData.postFavoris($event).then((value: AxiosResponse<object>)=> {
+          
+           this.getFavorisData()
+        }).catch((error: AxiosResponse<any>) => {
+            console.log(error);
+        })
+
+       
+    }
+    
+  }
+
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+  .favoris {
+    background-color: #efefef;
+    padding: 6px 15px;
 
+    h2 {
+        font-size: 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+
+      li {
+        margin-bottom: 15px;
+      }
+    }
+  }
 </style>

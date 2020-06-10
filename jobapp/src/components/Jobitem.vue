@@ -28,14 +28,21 @@
                 <div v-html="jobdata.description"></div>
             </b-card-text>
 
-            <b-button href="#" variant="primary">Postuler sur le site</b-button>
+            <div>
+                <b-button variant="primary">Postuler sur le site</b-button>
+                <b-button v-if="isfavori == false" variant="danger" @click.stop="buildFavoris">Mettre en favoris</b-button>
+                <b-button v-else disabled variant="success">Favoris</b-button>
+            </div>
+           
         </b-card>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 import { BIconHouse, BIconBag, BIconCalendar2Date, BIconShop} from 'bootstrap-vue'
+import Job from '@/model/job'
+import Favoris from '@/model/favoris'
 
 @Component({
     components: {
@@ -48,11 +55,42 @@ import { BIconHouse, BIconBag, BIconCalendar2Date, BIconShop} from 'bootstrap-vu
 
 export default class Jobitem extends Vue {
     private toggle: boolean = false;
+    private favoris: Favoris = new Favoris;
+    private isfavori: boolean = false;
 
-    @Prop({required: true, type: Object}) jobdata: object 
+    @Prop() jobdata: Job
+    @Prop() favorisId: [string]
 
     toggleClick(): void {
         this.toggle = !this.toggle;
+    }
+    getdate(): string {
+        return new Date().toLocaleString()
+    }
+    buildFavoris() {
+        this.favoris.title = this.jobdata.title;
+        this.favoris.location = this.jobdata.location;
+        this.favoris.company = this.jobdata.company;
+        this.favoris.date = this.getdate();
+        this.favoris.id = this.jobdata.id;
+        this.isfavori = true;
+        this.addFavoris(this.favoris)
+    }
+    checkfavoris() {
+        this.favorisId.forEach((value)=> {
+            if(value === this.jobdata.id) {
+                this.isfavori = true;
+            }
+        })
+    }
+
+    mounted() {
+        this.checkfavoris()
+    }
+
+    @Emit('addfavoris')
+    addFavoris(favor: Favoris): void {
+         favor
     }
 }
 </script>
@@ -92,11 +130,12 @@ export default class Jobitem extends Vue {
         }
     }
     .buttons {
-        margin-bottom: 20px;
+        margin-bottom: 20px;  
+    }
 
-        .button {
-            color: var(--primary);
-            cursor: pointer;
+    .btn {
+        &:last-child {
+            margin-left: 30px;
         }
     }
 </style>
