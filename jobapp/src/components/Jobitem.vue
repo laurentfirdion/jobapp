@@ -59,7 +59,7 @@ export default class Jobitem extends Vue {
     private isfavori: boolean = false;
 
     @Prop() jobdata: Job
-    @Prop() favorisId: [string]
+    @Prop() favorisId: [Favoris]
 
     toggleClick(): void {
         this.toggle = !this.toggle;
@@ -77,11 +77,16 @@ export default class Jobitem extends Vue {
         this.addFavoris(this.favoris)
     }
     checkfavoris() {
-        this.favorisId.forEach((value)=> {
-            if(value === this.jobdata.id) {
-                this.isfavori = true;
+        for(let i = 0; i < this.favorisId.length; i++ ) {          
+             for(const [key, value] of Object.entries(this.favorisId[i])) {
+                 if(key == "id") {
+                     if(value === this.jobdata.id) {
+                          this.isfavori = true;
+                     }
+                 }
             }
-        })
+        }
+        
     }
 
     mounted() {

@@ -1,4 +1,5 @@
-export default class Favoris {
+export default class Favoris { 
+    [key: string]: string;
     id: string;
     date: string;
     company: string;

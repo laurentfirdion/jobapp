@@ -5,12 +5,14 @@
           <p>Recherche</p>
           <Search v-on:search="callSearch($event)" />
 
-           <div class="favoris" v-if="Object.keys(favoris).length">
+           <div class="favoris" v-if="favoris.length > 0">
                 <h2>Mes offres favoris</h2>
                 <ul>
                   <li v-for="(favori, index) in favoris" :key="index">
-                    {{ favori.title}}  {{ favori.company}} <br/>
-                    {{ favori.location}}
+                    <span v-for="(favor, index) in favori" :key="index">
+                         {{ favor.title}}  {{ favor.company}} <br/>
+                         {{ favor.location}}
+                    </span> 
                   </li>
                 </ul>
             </div>
@@ -65,7 +67,7 @@ export default class Joblist extends Vue {
   public titleNb: number = -1;
   public jobdescription: string = "";
   public location: string = "";
-  private favoris: Favoris = new Favoris;
+  private favoris: Favoris[] = [new Favoris];
   private favorisArray: Array<string> = [];
     
   created() {
@@ -83,13 +85,15 @@ export default class Joblist extends Vue {
     userData.getFavoris().then((value: AxiosResponse<Favoris>)=> {
        
         if(value.data !== null) {
-           this.favoris = value.data;
+           this.favoris = [value.data];
   
-            const table: any = this.favoris
-            for(const item in table) {
-              const obj: Favoris = table[item];
-              this.favorisArray.push(obj.id)
+          for(let i=0; i < this.favoris.length; i++){
+          
+            for(const item in this.favoris[i]) {
+              this.favorisArray.push(this.favoris[i][item])
             }
+          }
+    
         }
         
     })
@@ -109,10 +113,9 @@ export default class Joblist extends Vue {
     console.log($event)
     if(Object.keys($event).length > 0) {
         const userData: UserData = new UserData();
-        userData.postFavoris($event).then((value: AxiosResponse<object>)=> {
-          
+        userData.postFavoris($event).then(()=> {       
            this.getFavorisData()
-        }).catch((error: AxiosResponse<any>) => {
+        }).catch((error: AxiosResponse<string>) => {
             console.log(error);
         })
 
@@ -120,6 +123,7 @@ export default class Joblist extends Vue {
     }
     
   }
+
 
 }
 </script>
