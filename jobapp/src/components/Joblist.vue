@@ -4,18 +4,7 @@
         <b-col col lg="3">
           <p>Recherche</p>
           <Search v-on:search="callSearch($event)" />
-
-           <div class="favoris" v-if="favoris.length > 0">
-                <h2>Mes offres favoris</h2>
-                <ul>
-                  <li v-for="(favori, index) in favoris" :key="index">
-                    <span v-for="(favor, index) in favori" :key="index">
-                         {{ favor.title}}  {{ favor.company}} <br/>
-                         {{ favor.location}}
-                    </span> 
-                  </li>
-                </ul>
-            </div>
+          <FavorisList v-bind:favorItems="favoris" v-bind:supprFavori="supprFavori" :key="favoriskey" />
         </b-col>
         <b-col col lg="9">
             <h1 v-if="titleNb >= 0">{{titleNb}} offre{{titleNb > 1 ? "s" : ""}} d'emploi aujourd'hui</h1>
@@ -54,12 +43,14 @@ import UserData from '@/service/user'
 import Jobitem from './Jobitem.vue'
 import Search from './Search.vue'
 import Tag from './Tag.vue'
+import FavorisList from './Favoris.vue'
  
 @Component({
   components: {
     Jobitem,
     Search,
-    Tag
+    Tag,
+    FavorisList
   }
 })
 export default class Joblist extends Vue {
@@ -69,6 +60,7 @@ export default class Joblist extends Vue {
   public location: string = "";
   private favoris: Favoris[] = [new Favoris];
   private favorisArray: Array<string> = [];
+  private favoriskey: number = 1;
     
   created() {
     const callJob: CallJob = new CallJob();
@@ -88,9 +80,8 @@ export default class Joblist extends Vue {
            this.favoris = [value.data];
   
           for(let i=0; i < this.favoris.length; i++){
-          
             for(const item in this.favoris[i]) {
-              this.favorisArray.push(this.favoris[i][item])
+              this.favorisArray.push(this.favoris[i][item])    
             }
           }
     
@@ -110,7 +101,6 @@ export default class Joblist extends Vue {
   }
 
   updateFavoris($event: Favoris): void {
-    console.log($event)
     if(Object.keys($event).length > 0) {
         const userData: UserData = new UserData();
         userData.postFavoris($event).then(()=> {       
@@ -124,26 +114,21 @@ export default class Joblist extends Vue {
     
   }
 
+  supprFavori(e: Event) {
+          const favoriId: string = (e.target as Element).parentElement!.id
+          for(let i = 0; i < this.favoris.length; i++) {
+            delete this.favoris[i][favoriId];
+          }
+          const userData: UserData = new UserData();
+          userData.deleteFavoris(favoriId).then(()=> {       
+            this.getFavorisData()
+          }).catch((error: AxiosResponse<string>) => {
+              console.log(error);
+          })
+          this.favoriskey = this.favoriskey + 1;
+  
+  } 
+
 
 }
 </script>
-
-<style scoped lang="scss">
-  .favoris {
-    background-color: #efefef;
-    padding: 6px 15px;
-
-    h2 {
-        font-size: 20px;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      text-align: left;
-
-      li {
-        margin-bottom: 15px;
-      }
-    }
-  }
-</style>
