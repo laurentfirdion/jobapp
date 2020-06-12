@@ -21,7 +21,7 @@
               <p>dans le monde, commencez à chercher !</p>
             </div> 
             <div class="serp" v-if="Object.keys(joblist).length">
-              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" v-on:addfavoris="updateFavoris($event)" v-bind:favorisId="favorisArray" />
+              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" v-on:addfavoris="updateFavoris($event)" v-bind:favorisId="favoris" :bus="bus"/>
             </div>
             <div v-else>
               <p>Aucune offre pour votre recherche</p>
@@ -59,8 +59,8 @@ export default class Joblist extends Vue {
   public jobdescription: string = "";
   public location: string = "";
   private favoris: Favoris[] = [new Favoris];
-  private favorisArray: Array<string> = [];
   private favoriskey: number = 1;
+  public bus = new Vue()
     
   created() {
     const callJob: CallJob = new CallJob();
@@ -78,13 +78,6 @@ export default class Joblist extends Vue {
        
         if(value.data !== null) {
            this.favoris = [value.data];
-  
-          for(let i=0; i < this.favoris.length; i++){
-            for(const item in this.favoris[i]) {
-              this.favorisArray.push(this.favoris[i][item])    
-            }
-          }
-    
         }
         
     })
@@ -126,7 +119,7 @@ export default class Joblist extends Vue {
               console.log(error);
           })
           this.favoriskey = this.favoriskey + 1;
-  
+          this.bus.$emit('supprfav')
   } 
 
 

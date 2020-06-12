@@ -60,6 +60,7 @@ export default class Jobitem extends Vue {
 
     @Prop() jobdata: Job
     @Prop() favorisId: [Favoris]
+    @Prop() bus: Vue
 
     toggleClick(): void {
         this.toggle = !this.toggle;
@@ -77,15 +78,30 @@ export default class Jobitem extends Vue {
         this.addFavoris(this.favoris)
     }
     checkfavoris() {
-        for(let i = 0; i < this.favorisId.length; i++ ) {          
-             for(const [key, value] of Object.entries(this.favorisId[i])) {
-                 if(key == "id") {
-                     if(value === this.jobdata.id) {
-                          this.isfavori = true;
-                     }
-                 }
+        console.log('here')
+        if(this.favorisId.length < 1) {
+             this.isfavori = false;
+        } else {
+            for(let i = 0; i < this.favorisId.length; i++ ) {          
+           
+                if(Object.entries(this.favorisId[i]).length === 0) {
+                    this.isfavori = false;
+                }
+                for(const [key, value] of Object.entries(this.favorisId[i])) {
+                    for(const [keyr, valuer] of Object.entries(value)) {
+                        if(keyr == "id") {
+                            if(valuer === this.jobdata.id) {
+                                this.isfavori = true;
+                            } else {
+                                 this.isfavori = false;
+                            }
+                        }
+                    }
+                }
+            
             }
         }
+        
         
     }
 
@@ -97,6 +113,13 @@ export default class Jobitem extends Vue {
     addFavoris(favor: Favoris): void {
          favor
     }
+
+    updated() {
+        this.bus.$on('supprfav',() => {
+             this.checkfavoris();
+        })
+    }
+
 }
 </script>
 

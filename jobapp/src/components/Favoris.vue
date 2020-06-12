@@ -1,5 +1,5 @@
 <template>
-    <div class="favoris" v-if="favorItems.length > 0">
+    <div class="favoris" v-if="Object.keys(favorItems[0]).length > 0">
             <h2>Mes offres favoris</h2>
 
                 <ul v-for="(favori, indexA) in favorItems" :key="indexA">
