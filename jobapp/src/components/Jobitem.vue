@@ -29,7 +29,7 @@
             </b-card-text>
 
             <div>
-                <b-button variant="primary">Postuler sur le site</b-button>
+                <router-link class="btn btn-primary" :to="`/emplois/${jobdata.id}`">Voir l'offre</router-link>
                 <b-button v-if="isfavori == false" variant="danger" @click.stop="buildFavoris">Mettre en favoris</b-button>
                 <b-button v-else disabled variant="success">Favoris</b-button>
             </div>

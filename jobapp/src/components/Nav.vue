@@ -7,8 +7,8 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="#">Accueil</b-nav-item>
-        <b-nav-item href="#" disabled>Offres d'emploi</b-nav-item>
+        <b-nav-item ><router-link to="/">Accueil</router-link></b-nav-item>
+        <b-nav-item><router-link to="/emplois">Offres d'emploi</router-link></b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -44,3 +44,18 @@ export default {
     name: 'Nav'
 }
 </script>
+
+<style lang="scss" scoped>
+  a {
+    color: #ffffff;
+    &.router-link-exact-active {
+      color: #6c757d;
+      &:hover {
+         color: #6c757d;
+      }
+    }
+    &:hover {
+       color: #ffffff;
+    }
+  }
+</style>
