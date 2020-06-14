@@ -38,6 +38,7 @@
              <div v-if="is404">
                  <h1>Cette offre n'existe pas</h1>
              </div>
+               <BreadCrumbTail :bus="bus" />
      </div>
 </template>
 
@@ -45,6 +46,7 @@
     import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
     import { AxiosResponse } from "axios"
     import { BIconHouse, BIconBag, BIconCalendar2Date, BIconShop} from 'bootstrap-vue'
+    import BreadCrumbTail from '@/components/Breadcrumb.vue'
     import CallJob from '../service/calljob'
     import Job from '../model/job'
 
@@ -55,7 +57,8 @@
             BIconHouse,
             BIconBag,
             BIconCalendar2Date, 
-            BIconShop
+            BIconShop,
+            BreadCrumbTail
         }
     })
     export default class DetailOffre extends Vue  {
@@ -63,21 +66,23 @@
 
           public job: Job = new Job
           private is404: boolean = false
+          public bus = new Vue()
 
         @Watch('id')
         onchangeId() {
             this.callForjob()
         }
 
-        mounted() {
+        created() {
             this.callForjob()
         }
-
+ 
         callForjob() {
               const callJob: CallJob = new CallJob();
               if(this.id !== "") {
               callJob.getDetailJob(this.id).then((value: AxiosResponse<Job>)=>{
                     this.job = value.data;   
+                    this.bus.$emit('detailoaded', value.data.title)
                 }).catch((error: AxiosResponse<string>) => {
                      console.log(error)
                    this.is404 = true

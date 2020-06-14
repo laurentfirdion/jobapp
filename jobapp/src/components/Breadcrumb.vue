@@ -6,7 +6,8 @@
                 @click="routeTo(index)"
                 :class="{'linked': !!breadcrumb.link}"
             >
-            {{index !== breadcrumbList.length ? breadcrumb.name + " / " : breadcrumb.name}}
+            {{ breadcrumb.name}}
+            <span v-if="index < (breadcrumbList.length - 1)">/</span>
             </li>
         </ul>
     </div>
@@ -15,7 +16,7 @@
 <script lang="ts">
     import {Route} from 'vue-router'
     //import BreadCrumb from 'vue-router/types'
-    import { Component, Vue } from 'vue-property-decorator'
+    import { Component, Prop, Vue } from 'vue-property-decorator'
 
     class VueWithRoute extends Vue {
         $route: Route
@@ -31,9 +32,28 @@
     export default class BreadCrumbTail extends VueWithRoute {
         public breadcrumbList: RouterBread[] = [new RouterBread()]
  
+        @Prop() bus: Vue
        
         mounted() {
             this.breadcrumbList = this.$route.meta.breadcrumb
+            this.checkBreadName()
+        }
+        updated() {
+            this.checkBreadName()
+        }
+
+        checkBreadName() {
+            const last: number = this.breadcrumbList.length - 1;
+            for(let i= 0; i < this.breadcrumbList.length; i++) {
+               
+               if(this.bus !== undefined) {
+                    this.bus.$on('detailoaded',(data: string) => {
+                         this.breadcrumbList[last].name = data
+                    })  
+               }
+                   
+                
+            }
         }
 
         routeTo(routeTo: number) {
@@ -46,13 +66,16 @@
 <style lang="scss" scoped>
     .breadcrumb {
         background-color: transparent;
+        padding-left: 0;
+        padding-right: 0;
 
         ul {
             display: flex;
             list-style: none;
+            padding: 0;
 
             li {
-                margin-right: 15px;
+                margin-right: 6px;
 
                 &.linked {
                     cursor: pointer;
@@ -60,6 +83,16 @@
 
                     &:hover {
                         text-decoration: underline;
+                    }
+                }
+
+                span {
+                    color: #303030;
+                    cursor: default;
+
+                    &:hover {
+                        color: #303030;
+                        text-decoration: none;
                     }
                 }
             }

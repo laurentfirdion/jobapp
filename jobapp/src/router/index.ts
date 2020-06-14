@@ -37,7 +37,7 @@ Vue.use(VueRouter)
       breadcrumb: [
         {name : 'Accueil', link: '/'},
         {name : 'Emplois', link: '/emplois'},
-        {name : ':id'}
+        {name : ''}
       ]
     }
   }

@@ -8,14 +8,14 @@
     import {Route} from 'vue-router'
     import { Component, Vue } from 'vue-property-decorator'
     import DetailOffre from '@/components/DetailOffre.vue'
-
+      
     class VueWithRoute extends Vue {
         $route: Route
     }
 
     @Component({
         components: {
-            DetailOffre
+            DetailOffre,
         }
     })
 
