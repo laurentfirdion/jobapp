@@ -118,6 +118,11 @@
           font-weight: 700;
           font-size: 16px;
       }
+      .logo {
+        margin: auto;
+        display: block;
+        margin-bottom: 13px;
+      }
     .infos {
         background-color: #efefef;
         padding: 15px 15px;
