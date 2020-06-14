@@ -44,6 +44,8 @@ import { BIconHouse, BIconBag, BIconCalendar2Date, BIconShop} from 'bootstrap-vu
 import Job from '@/model/job'
 import Favoris from '@/model/favoris'
 
+ import '@/assets/style/offer.scss'
+
 @Component({
     components: {
         BIconHouse,
@@ -78,7 +80,6 @@ export default class Jobitem extends Vue {
         this.addFavoris(this.favoris)
     }
     checkfavoris() {
-        console.log('here')
         if(this.favorisId.length < 1) {
              this.isfavori = false;
         } else {
@@ -133,29 +134,6 @@ export default class Jobitem extends Vue {
     }
     .card-title {
         margin-top: 12px;
-    }
-    .logo {
-        width: 120px;
-        height: 80px;
-    }
-    .nologo {
-        border: 1px solid #999;
-        display: flex;
-        align-content: center;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-        width: 120px;
-        height: 80px;
-    }
-    .infos {
-        span {
-            margin-left: 6px;
-
-            &:not(:last-child) {
-                margin-right: 10px;
-            }
-        }
     }
     .buttons {
         margin-bottom: 20px;  

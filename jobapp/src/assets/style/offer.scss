@@ -1,0 +1,23 @@
+.logo {
+    width: 120px;
+    height: 80px;
+}
+.nologo {
+    border: 1px solid #999;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    width: 120px;
+    height: 80px;
+}
+.infos {
+    span {
+        margin-left: 6px;
+
+        &:not(:last-child) {
+            margin-right: 10px;
+        }
+    }
+}

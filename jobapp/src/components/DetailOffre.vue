@@ -48,6 +48,8 @@
     import CallJob from '../service/calljob'
     import Job from '../model/job'
 
+    import '@/assets/style/offer.scss'
+
     @Component({
         components: {
             BIconHouse,
@@ -66,7 +68,7 @@
         onchangeId() {
             this.callForjob()
         }
-        
+
         mounted() {
             this.callForjob()
         }
@@ -91,31 +93,35 @@
       text-align: left;
 
       h1 {
+          margin-bottom: 40px;
           text-align: center;
       }
+      h2 {
+          font-size: 18px;
+          line-height: normal;
+          border-bottom: 1px solid #ccc;
+          padding-bottom: 10px;
+          margin-bottom: 15px;
+          margin-top: 7px;  
 
-    .logo {
-        width: 120px;
-        height: 80px;
-    }
-    .nologo {
-        border: 1px solid #999;
-        display: flex;
-        align-content: center;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-        width: 120px;
-        height: 80px;
-    }
+          a {
+            color: #303030;
+          }
+      }
+      h4 {
+          color: #007bff;
+          font-weight: 700;
+          font-size: 16px;
+      }
     .infos {
-        span {
-            margin-left: 6px;
+        background-color: #efefef;
+        padding: 15px 15px;
+        margin-bottom: 30px;
 
-            &:not(:last-child) {
-                margin-right: 10px;
-            }
+        p {
+            margin: 0;
         }
     }
+    
   }
 </style>
