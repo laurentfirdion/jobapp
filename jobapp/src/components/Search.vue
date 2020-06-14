@@ -17,7 +17,7 @@
         public city: string = "";
 
         send() {
-            if(this.job !== "" && this.city !== "") {
+            if(this.job !== "" || this.city !== "") {
                 this.sendInfo([this.job, this.city])
             }
         }

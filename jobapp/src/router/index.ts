@@ -8,7 +8,12 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Accueil',
-    component: Home
+    component: Home,
+    meta: {
+      breadcrumb: [
+        {name : 'Accueil'}
+      ]
+    }
   },
   {
     path: '/emplois',
@@ -16,12 +21,25 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import('../views/Serp.vue')
+    component: () => import('../views/Serp.vue'),
+    meta: {
+      breadcrumb: [
+        {name : 'Accueil', link: '/'},
+        {name : 'Emplois'}
+      ]
+    }
   },
   {
     path: '/emplois/:id',
     name: "Detail",
-    component: () => import('../views/Detail.vue')
+    component: () => import('../views/Detail.vue'),
+    meta: {
+      breadcrumb: [
+        {name : 'Accueil', link: '/'},
+        {name : 'Emplois', link: '/emplois'},
+        {name : ':id'}
+      ]
+    }
   }
 ]
 

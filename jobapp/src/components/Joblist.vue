@@ -6,7 +6,7 @@
           <Search v-on:search="callSearch($event)" />
           <FavorisList v-bind:favorItems="favoris" v-bind:supprFavori="supprFavori" :key="favoriskey" />
         </b-col>
-        <b-col col lg="9">
+        <b-col col lg="9" class="serp">
             <h1 v-if="titleNb >= 0">{{titleNb}} offre{{titleNb > 1 ? "s" : ""}} d'emploi aujourd'hui</h1>
             <h1 v-else>Plein d'offres d'emploi aujourd'hui</h1>
            
@@ -125,3 +125,9 @@ export default class Joblist extends Vue {
 
 }
 </script>
+
+<style lang="scss" scoped>
+  .serp {
+      min-height: 500px;
+  }
+</style>

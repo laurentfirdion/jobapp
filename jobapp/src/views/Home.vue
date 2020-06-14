@@ -3,13 +3,20 @@
      <div class="home">
         <img alt="Vue logo" src="../assets/logo.png">
      </div>
+      <BreadCrumbTail />
   </b-container>
 </template>
 
-<script>
-// @ is an alias to /src
+<script lang="ts">
+  import BreadCrumbTail from '@/components/Breadcrumb.vue'
+   import { Component, Vue } from 'vue-property-decorator'
 
-export default {
-  name: 'Home'
+@Component({
+  components: {
+      BreadCrumbTail
+  }
+})
+export default class Home extends Vue{
+ 
 }
 </script>
