@@ -1,7 +1,7 @@
 <template>
     <div>
   <b-navbar toggleable="lg" type="dark" variant="info">
-    <b-navbar-brand href="#">DevJobs</b-navbar-brand>
+    <b-navbar-brand><router-link to="/">DevJobs</router-link></b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -56,6 +56,13 @@ export default {
     }
     &:hover {
        color: #ffffff;
+    }
+  }
+  .navbar-brand a {
+    color: #ffffff;
+    &:hover {
+       color: #ffffff;
+       text-decoration: none;
     }
   }
 </style>
