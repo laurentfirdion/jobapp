@@ -44,11 +44,12 @@
 
         checkBreadName() {
             const last: number = this.breadcrumbList.length - 1;
+            const reg: RegExp = /(\/)/g;
             for(let i= 0; i < this.breadcrumbList.length; i++) {
                
                if(this.bus !== undefined) {
                     this.bus.$on('detailoaded',(data: string) => {
-                         this.breadcrumbList[last].name = data
+                         this.breadcrumbList[last].name = data.replace(reg, '')
                     })  
                }
                    
