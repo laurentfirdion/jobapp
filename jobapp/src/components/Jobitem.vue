@@ -43,6 +43,7 @@ import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 import { BIconHouse, BIconBag, BIconCalendar2Date, BIconShop} from 'bootstrap-vue'
 import Job from '@/model/job'
 import Favoris from '@/model/favoris'
+import store from '@/store/store'
 
  import '@/assets/style/offer.scss'
 
@@ -57,12 +58,31 @@ import Favoris from '@/model/favoris'
 
 export default class Jobitem extends Vue {
     private toggle: boolean = false;
-    private favoris: Favoris = new Favoris;
-    private isfavori: boolean = false;
-
+   
     @Prop() jobdata: Job
-    @Prop() favorisId: [Favoris]
     @Prop() bus: Vue
+
+    get isfavori(): boolean {
+        const idfav: Favoris = store.state.favoris;
+
+        let valFav: boolean = false;
+        if(idfav !== undefined) {
+             
+                for(const [key, value] of Object.entries(idfav)) {
+                    for(const [keyr, valuer] of Object.entries(value)) {
+                        if(keyr == "id") {
+                            if(valuer === this.jobdata.id) {
+                                valFav = true;
+                            }
+                        }
+                    }
+                }
+            
+            
+         }
+ 
+        return valFav;
+    } 
 
     toggleClick(): void {
         this.toggle = !this.toggle;
@@ -70,7 +90,7 @@ export default class Jobitem extends Vue {
     getdate(): string {
         return new Date().toLocaleString()
     }
-    buildFavoris() {
+  /*   buildFavoris() {
         this.favoris.title = this.jobdata.title;
         this.favoris.location = this.jobdata.location;
         this.favoris.company = this.jobdata.company;
@@ -78,8 +98,8 @@ export default class Jobitem extends Vue {
         this.favoris.id = this.jobdata.id;
         this.isfavori = true;
         this.addFavoris(this.favoris)
-    }
-    checkfavoris() {
+    } */
+/*     checkfavoris() {
         if(this.favorisId.length < 1) {
              this.isfavori = false;
         } else {
@@ -104,10 +124,10 @@ export default class Jobitem extends Vue {
         }
         
         
-    }
+    } */
 
     mounted() {
-        this.checkfavoris()
+       // this.checkfavoris()
     }
 
     @Emit('addfavoris')
@@ -117,7 +137,7 @@ export default class Jobitem extends Vue {
 
     updated() {
         this.bus.$on('supprfav',() => {
-             this.checkfavoris();
+          //   this.checkfavoris();
         })
     }
 

@@ -1,9 +1,8 @@
 <template>
-    <div class="favoris" v-if="Object.keys(favorItems[0]).length > 0">
+    <div class="favoris" v-if="favorItems">
             <h2>Mes offres favoris</h2>
-
-                <ul v-for="(favori, indexA) in favorItems" :key="indexA">
-                    <li v-for="(favor, index) in favori" :key="index" :id="index">
+                <ul>
+                    <li v-for="(favor, index) in favorItems" :key="index" :id="index">
                          {{ favor.title}}  {{ favor.company}} <br/>
                          {{ favor.location}}    
                          <b-button class="btn-sm btn-danger" @click="supprFavori">Supprimer</b-button>
