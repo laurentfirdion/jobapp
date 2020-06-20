@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { BIconHouse, BIconBag, BIconCalendar2Date, BIconShop} from 'bootstrap-vue'
 import Job from '@/model/job'
 import Favoris from '@/model/favoris'
@@ -58,31 +58,44 @@ import store from '@/store/store'
 
 export default class Jobitem extends Vue {
     private toggle: boolean = false;
+    public isfavori: boolean = false;
    
     @Prop() jobdata: Job
     @Prop() bus: Vue
 
-    get isfavori(): boolean {
-        const idfav: Favoris = store.state.favoris;
 
-        let valFav: boolean = false;
-        if(idfav !== undefined) {
-             
-                for(const [key, value] of Object.entries(idfav)) {
+
+   mounted() {
+        const favorislist: Favoris = store.state.favoris
+        this.extractFavoris(favorislist)
+
+        store.subscribe((mutation, state) => {
+            if(mutation.type === "ADDFAVORI" || mutation.type === "DELETEFAVORI" ) {
+                this.extractFavoris(state.favoris)
+            }
+        })
+    } 
+
+    extractFavoris(favoris: Favoris) {
+        if(favoris) {
+                if(Object.entries(favoris).length === 0) {
+                    this.isfavori = false;
+                    return false;
+                }
+                for(const [key, value] of Object.entries(favoris)) {
                     for(const [keyr, valuer] of Object.entries(value)) {
                         if(keyr == "id") {
                             if(valuer === this.jobdata.id) {
-                                valFav = true;
+                               this.isfavori = true;
+                            } else {
+                                this.isfavori = false;
                             }
                         }
                     }
                 }
-            
-            
-         }
- 
-        return valFav;
-    } 
+            }
+    }
+    
 
     toggleClick(): void {
         this.toggle = !this.toggle;
@@ -90,56 +103,16 @@ export default class Jobitem extends Vue {
     getdate(): string {
         return new Date().toLocaleString()
     }
-  /*   buildFavoris() {
-        this.favoris.title = this.jobdata.title;
-        this.favoris.location = this.jobdata.location;
-        this.favoris.company = this.jobdata.company;
-        this.favoris.date = this.getdate();
-        this.favoris.id = this.jobdata.id;
-        this.isfavori = true;
-        this.addFavoris(this.favoris)
-    } */
-/*     checkfavoris() {
-        if(this.favorisId.length < 1) {
-             this.isfavori = false;
-        } else {
-            for(let i = 0; i < this.favorisId.length; i++ ) {          
-           
-                if(Object.entries(this.favorisId[i]).length === 0) {
-                    this.isfavori = false;
-                }
-                for(const [key, value] of Object.entries(this.favorisId[i])) {
-                    for(const [keyr, valuer] of Object.entries(value)) {
-                        if(keyr == "id") {
-                            if(valuer === this.jobdata.id) {
-                                this.isfavori = true;
-                            } else {
-                                 this.isfavori = false;
-                            }
-                        }
-                    }
-                }
-            
-            }
-        }
+    buildFavoris() {
+        const newfavori: Favoris = new Favoris();
+        newfavori.title = this.jobdata.title;
+        newfavori.location = this.jobdata.location;
+        newfavori.company = this.jobdata.company;
+        newfavori.date = this.getdate();
+        newfavori.id = this.jobdata.id;
         
-        
-    } */
-
-    mounted() {
-       // this.checkfavoris()
-    }
-
-    @Emit('addfavoris')
-    addFavoris(favor: Favoris): void {
-         favor
-    }
-
-    updated() {
-        this.bus.$on('supprfav',() => {
-          //   this.checkfavoris();
-        })
-    }
+        store.dispatch('addFavoris',newfavori)
+    } 
 
 }
 </script>

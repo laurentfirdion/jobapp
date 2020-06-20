@@ -21,7 +21,7 @@
               <p>dans le monde, commencez à chercher !</p>
             </div> 
             <div class="serp" v-if="Object.keys(joblist).length">
-              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" v-on:addfavoris="updateFavoris($event)" :bus="bus"/>
+              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" :bus="bus"/>
             </div>
             <div v-else>
               <p>Aucune offre pour votre recherche</p>
@@ -68,6 +68,13 @@ export default class Joblist extends Vue {
     store.dispatch('getFavoris').then(() => 
          this.getFavorisData()
     )
+     store.subscribe((mutation, state) => {
+            if(mutation.type === "ADDFAVORI") {
+              console.log(mutation.type)
+                this.favoris = state.favoris;
+                this.favoriskey = this.favoriskey + 1;
+            }
+        })
   }
     
   created() {
@@ -82,7 +89,6 @@ export default class Joblist extends Vue {
  
 
   getFavorisData(): void {
-   
         if(store.state.favoris !== null) {
            this.favoris = store.state.favoris;
         }
@@ -98,41 +104,22 @@ export default class Joblist extends Vue {
     })
   }
 
-  updateFavoris($event: Favoris): void {
-    if(Object.keys($event).length > 0) {
-        const userData: UserData = new UserData();
-        userData.postFavoris($event).then(()=> {       
-          // this.getFavorisData()
-        }).catch((error: AxiosResponse<string>) => {
-            console.log(error);
-        })
-
-       
-    }
-    
-  }
 
   supprFavori(e: Event) {
           const favoriId: string = (e.target as Element).parentElement!.id
-         
-            delete this.favoris[favoriId];
+          delete this.favoris[favoriId];
           
-          const userData: UserData = new UserData();
-          userData.deleteFavoris(favoriId).then(()=> {       
-           // this.getFavorisData()
-          }).catch((error: AxiosResponse<string>) => {
-              console.log(error);
-          })
+          store.dispatch('supprFavoris', favoriId)
+          
           this.favoriskey = this.favoriskey + 1;
-          this.bus.$emit('supprfav')
+       
 
-          //todo déplacer cette appel api dans le store
   } 
 
 
 }
 </script>
-
+ 
 <style lang="scss" scoped>
   .serp {
       min-height: 500px;

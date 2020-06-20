@@ -7,6 +7,14 @@ import { AxiosResponse } from "axios"
 
 Vue.use(Vuex)
 
+class AddFavorisTypeReturn {
+  name: string;
+}
+
+class Newobject {
+  [key: string]: Favoris
+}
+
  const store = new Vuex.Store({
     state: {
       favoris: new Favoris()
@@ -18,7 +26,17 @@ Vue.use(Vuex)
       },
       DELETEFAVORI(state, favori) {
         delete state.favoris[favori]
-        return state.favoris
+      },
+      ADDFAVORI(state, favori) {
+        const newkey: string = favori[1];
+        const newfav: Favoris = favori[0];
+
+        const newObject: Newobject = new Newobject();
+        newObject[newkey] = newfav;
+          
+        const newlist = Object.assign(state.favoris, newObject)
+        state.favoris = newlist;
+    
       }
     },
     actions: {
@@ -44,6 +62,25 @@ Vue.use(Vuex)
           user.deleteFavoris(favori).then(()=> {
             commit('DELETEFAVORI', favori)
             resolve(); 
+          }).catch((error) => {
+            console.log(error.statusText);
+          });
+        })
+      },
+      addFavoris({commit, state}, favori: Favoris) {
+        return new Promise((resolve) => {
+          const user: UserData = new UserData()
+          user.postFavoris(favori).then((data)=> {
+            const newenter = data.data.name;
+            const newfav: Favoris = new Favoris;
+
+            newfav.id = favori.id;
+            newfav.company = favori.company;
+            newfav.date = favori.date;
+            newfav.location = favori.location;
+            newfav.title = favori.title;
+            commit('ADDFAVORI', [newfav,newenter])
+            resolve();  
           }).catch((error) => {
             console.log(error.statusText);
           });
