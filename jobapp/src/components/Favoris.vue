@@ -22,7 +22,7 @@
         @Prop() favorItems: Favoris[] 
         @Prop() supprFavori: Function    
 
-        get countfavoris() {
+        get countfavoris(): number {
           return store.getters.countFavoris
         }
     }
