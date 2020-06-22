@@ -8,17 +8,23 @@
                          <b-button :id="favor.id" class="btn-sm btn-danger" @click="supprFavori">Supprimer</b-button>
                     </li>   
                 </ul>
+                <p v-if="countfavoris > 0">{{countfavoris}} offre{{countfavoris > 1 ? "s" : ""}} en favori</p>
      </div>
 </template>
 
 <script lang="ts">
     import { Component, Prop, Vue } from 'vue-property-decorator'
     import Favoris from '@/model/favoris'
+    import store from '@/store/store'
 
     @Component
     export default class FavorisList extends Vue  {
         @Prop() favorItems: Favoris[] 
         @Prop() supprFavori: Function    
+
+        get countfavoris() {
+          return store.getters.countFavoris
+        }
     }
 </script>
 

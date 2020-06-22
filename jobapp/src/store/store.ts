@@ -16,12 +16,18 @@ class Newobject {
     state: {
       favoris: new Favoris()
     },
+    getters: {
+        countFavoris: state => {
+            return Object.entries(state.favoris).length
+        }
+    },
     mutations: {
       FAVORISLIST(state, newfav) {
         state.favoris = newfav
       },
       DELETEFAVORI(state, favori: [string,null]) {
-        delete state.favoris[favori[0]]
+        Vue.delete(state.favoris, favori[0])
+        state.favoris = { ...state.favoris };
       },
       ADDFAVORI(state, favori) {
         const newkey: string = favori[1];
@@ -30,7 +36,7 @@ class Newobject {
         const newObject: Newobject = new Newobject();
         newObject[newkey] = newfav;
           
-        const newlist = Object.assign(state.favoris, newObject)
+        const newlist = Object.assign({},state.favoris, newObject)
         state.favoris = newlist;
     
       }

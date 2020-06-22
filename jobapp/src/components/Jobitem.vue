@@ -68,7 +68,6 @@ export default class Jobitem extends Vue {
 
         store.subscribe((mutation, state) => {
             if(mutation.type === "DELETEFAVORI" ) {
-                
                if(mutation.payload[1] === this.jobdata.id){
                     this.isfavori = false;
                }
