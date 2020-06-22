@@ -43,10 +43,7 @@
     } 
 
     .present {
-        background: rgb(249,249,249);
-        background: linear-gradient(38deg, rgba(249,249,249,1) 0%, rgba(9,116,121,1) 31%, rgba(255,0,67,1) 100%);
-        min-height: 100vh;
-            position: relative;
+        position: relative;
     }
     h1 {
         color: #fff;

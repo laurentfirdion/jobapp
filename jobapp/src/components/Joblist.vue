@@ -21,7 +21,7 @@
               <p>dans le monde, commencez à chercher !</p>
             </div> 
             <div class="serp" v-if="Object.keys(joblist).length">
-              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" v-on:addfavoris="updateFavoris($event)" v-bind:favorisId="favoris" :bus="bus"/>
+              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" />
             </div>
             <div v-else>
               <p>Aucune offre pour votre recherche</p>
@@ -39,11 +39,12 @@ import { AxiosResponse } from "axios"
 import Job from '../model/job'
 import Favoris from '@/model/favoris'
 import CallJob from '../service/calljob'
-import UserData from '@/service/user'
 import Jobitem from './Jobitem.vue'
 import Search from './Search.vue'
 import Tag from './Tag.vue'
 import FavorisList from './Favoris.vue'
+
+import store from '@/store/store'
  
 @Component({
   components: {
@@ -58,9 +59,20 @@ export default class Joblist extends Vue {
   public titleNb: number = -1;
   public jobdescription: string = "";
   public location: string = "";
-  private favoris: Favoris[] = [new Favoris];
+  private favoris: Favoris = new Favoris;
   private favoriskey: number = 1;
-  public bus = new Vue()
+
+  beforeCreate() {
+    store.dispatch('getFavoris').then(() => 
+         this.getFavorisData()
+    )
+     store.subscribe((mutation, state) => {
+            if(mutation.type === "ADDFAVORI") {
+                this.favoris = state.favoris;
+                this.favoriskey = this.favoriskey + 1;
+            }
+        })
+  }
     
   created() {
     const callJob: CallJob = new CallJob();
@@ -68,20 +80,14 @@ export default class Joblist extends Vue {
         this.joblist = value.data;
         this.titleNb = value.data.length;
     })
-
-    this.getFavorisData()
   } 
+ 
 
   getFavorisData(): void {
-     const userData: UserData = new UserData();
-    userData.getFavoris().then((value: AxiosResponse<Favoris>)=> {
-       
-        if(value.data !== null) {
-           this.favoris = [value.data];
+        if(store.state.favoris !== null) {
+           this.favoris = store.state.favoris;
         }
-        
-    })
-  }
+  } 
 
   callSearch($event: string[]): void {
        const callJob: CallJob = new CallJob();
@@ -93,39 +99,21 @@ export default class Joblist extends Vue {
     })
   }
 
-  updateFavoris($event: Favoris): void {
-    if(Object.keys($event).length > 0) {
-        const userData: UserData = new UserData();
-        userData.postFavoris($event).then(()=> {       
-           this.getFavorisData()
-        }).catch((error: AxiosResponse<string>) => {
-            console.log(error);
-        })
-
-       
-    }
-    
-  }
 
   supprFavori(e: Event) {
           const favoriId: string = (e.target as Element).parentElement!.id
-          for(let i = 0; i < this.favoris.length; i++) {
-            delete this.favoris[i][favoriId];
-          }
-          const userData: UserData = new UserData();
-          userData.deleteFavoris(favoriId).then(()=> {       
-            this.getFavorisData()
-          }).catch((error: AxiosResponse<string>) => {
-              console.log(error);
-          })
+          const fid: string|null = (e.target! as Element).getAttribute!('id')
+          delete this.favoris[favoriId];
+          const arrayTopush: [string, string|null] = [favoriId, fid]   
+          store.dispatch('supprFavoris', arrayTopush) 
+          
           this.favoriskey = this.favoriskey + 1;
-          this.bus.$emit('supprfav')
   } 
 
 
 }
 </script>
-
+ 
 <style lang="scss" scoped>
   .serp {
       min-height: 500px;
