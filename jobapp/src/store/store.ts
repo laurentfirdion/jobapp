@@ -7,9 +7,6 @@ import { AxiosResponse } from "axios"
 
 Vue.use(Vuex)
 
-class AddFavorisTypeReturn {
-  name: string;
-}
 
 class Newobject {
   [key: string]: Favoris
@@ -20,12 +17,11 @@ class Newobject {
       favoris: new Favoris()
     },
     mutations: {
-
       FAVORISLIST(state, newfav) {
         state.favoris = newfav
       },
-      DELETEFAVORI(state, favori) {
-        delete state.favoris[favori]
+      DELETEFAVORI(state, favori: [string,null]) {
+        delete state.favoris[favori[0]]
       },
       ADDFAVORI(state, favori) {
         const newkey: string = favori[1];
@@ -41,7 +37,6 @@ class Newobject {
     },
     actions: {
       getFavoris({commit}) {
-
         return new Promise((resolve) => {
           const user: UserData = new UserData()
           user.getFavoris().then((datafav: AxiosResponse<Favoris>)=> {
@@ -56,10 +51,10 @@ class Newobject {
         })
        
       },
-      supprFavoris({commit, state}, favori: string) {
+      supprFavoris({commit, state}, favori: [string,null]) {
         return new Promise((resolve) => {
           const user: UserData = new UserData()
-          user.deleteFavoris(favori).then(()=> {
+          user.deleteFavoris(favori[0]).then(()=> {
             commit('DELETEFAVORI', favori)
             resolve(); 
           }).catch((error) => {

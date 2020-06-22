@@ -21,7 +21,7 @@
               <p>dans le monde, commencez à chercher !</p>
             </div> 
             <div class="serp" v-if="Object.keys(joblist).length">
-              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" :bus="bus"/>
+              <Jobitem v-for="jobitem in joblist" :key="jobitem.id" v-bind:jobdata="jobitem" />
             </div>
             <div v-else>
               <p>Aucune offre pour votre recherche</p>
@@ -39,7 +39,6 @@ import { AxiosResponse } from "axios"
 import Job from '../model/job'
 import Favoris from '@/model/favoris'
 import CallJob from '../service/calljob'
-import UserData from '@/service/user'
 import Jobitem from './Jobitem.vue'
 import Search from './Search.vue'
 import Tag from './Tag.vue'
@@ -62,7 +61,6 @@ export default class Joblist extends Vue {
   public location: string = "";
   private favoris: Favoris = new Favoris;
   private favoriskey: number = 1;
-  public bus = new Vue()
 
   beforeCreate() {
     store.dispatch('getFavoris').then(() => 
@@ -70,7 +68,6 @@ export default class Joblist extends Vue {
     )
      store.subscribe((mutation, state) => {
             if(mutation.type === "ADDFAVORI") {
-              console.log(mutation.type)
                 this.favoris = state.favoris;
                 this.favoriskey = this.favoriskey + 1;
             }
@@ -83,8 +80,6 @@ export default class Joblist extends Vue {
         this.joblist = value.data;
         this.titleNb = value.data.length;
     })
-
-   // this.getFavorisData()
   } 
  
 
@@ -107,13 +102,12 @@ export default class Joblist extends Vue {
 
   supprFavori(e: Event) {
           const favoriId: string = (e.target as Element).parentElement!.id
+          const fid: string|null = (e.target! as Element).getAttribute!('id')
           delete this.favoris[favoriId];
-          
-          store.dispatch('supprFavoris', favoriId)
+          const arrayTopush: [string, string|null] = [favoriId, fid]   
+          store.dispatch('supprFavoris', arrayTopush) 
           
           this.favoriskey = this.favoriskey + 1;
-       
-
   } 
 
 

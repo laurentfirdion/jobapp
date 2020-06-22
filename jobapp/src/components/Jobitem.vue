@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { BIconHouse, BIconBag, BIconCalendar2Date, BIconShop} from 'bootstrap-vue'
 import Job from '@/model/job'
 import Favoris from '@/model/favoris'
@@ -61,17 +61,17 @@ export default class Jobitem extends Vue {
     public isfavori: boolean = false;
    
     @Prop() jobdata: Job
-    @Prop() bus: Vue
 
-
-
-   mounted() {
+    mounted() {
         const favorislist: Favoris = store.state.favoris
         this.extractFavoris(favorislist)
 
         store.subscribe((mutation, state) => {
-            if(mutation.type === "ADDFAVORI" || mutation.type === "DELETEFAVORI" ) {
-                this.extractFavoris(state.favoris)
+            if(mutation.type === "DELETEFAVORI" ) {
+                
+               if(mutation.payload[1] === this.jobdata.id){
+                    this.isfavori = false;
+               }
             }
         })
     } 
@@ -87,9 +87,7 @@ export default class Jobitem extends Vue {
                         if(keyr == "id") {
                             if(valuer === this.jobdata.id) {
                                this.isfavori = true;
-                            } else {
-                                this.isfavori = false;
-                            }
+                            } 
                         }
                     }
                 }
@@ -112,6 +110,7 @@ export default class Jobitem extends Vue {
         newfavori.id = this.jobdata.id;
         
         store.dispatch('addFavoris',newfavori)
+         this.isfavori = true;
     } 
 
 }
