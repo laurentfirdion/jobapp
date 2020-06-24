@@ -2,36 +2,43 @@
     <div>
      <div class="home">
         <Presentation :title="title" :soustitre="soustitre" />
-       
+       <Carrousel :joblisthome="joblisthome" />
      </div>
-      <BreadCrumbTail />  
+     <b-container>
+         <BreadCrumbTail />  
+     </b-container>
     </div>
 </template>
 
 <script lang="ts">
   import BreadCrumbTail from '@/components/Breadcrumb.vue'
   import Presentation from '@/components/Presentation.vue'
-
+  import Carrousel from '@/components/Carrousel.vue'
+  import Job from '@/model/job'
+  import { AxiosResponse } from "axios"
+  import CallJob from '../service/calljob'
  
-   import { Component, Vue, Watch } from 'vue-property-decorator'
+  import { Component, Vue, Watch } from 'vue-property-decorator'
 
 @Component({
   components: {
       BreadCrumbTail,
-      Presentation
+      Presentation,
+      Carrousel
   }
 })
 export default class Home extends Vue{
       public title: string = "Devjob"
       public soustitre: string = "le site d'emploi des developpeurs"
       public isHome: boolean = false
-
-  /*     get countProp(): number {
-        return store.state.count
-      } */
+      joblisthome: Job[] = [new Job]; 
 
       created(){
         this.isHome = true
+        const callJob: CallJob = new CallJob();
+        callJob.getJob().then((value: AxiosResponse<Job[]>)=>{
+            this.joblisthome = value.data.slice(0,4);
+        })
       }
 
       beforeDestroy(){
@@ -59,6 +66,6 @@ export default class Home extends Vue{
   } 
   .breadcrumb {
     color: #ffffff;
-    padding: 0 30px;
+    margin-top: 50px;
   }
 </style>
