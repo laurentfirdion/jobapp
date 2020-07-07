@@ -3,15 +3,16 @@ import axios from 'axios';
 import {AxiosResponse} from "axios";
 
 export default class CallJob {
+    private url: string = 'https://jobs.github.com/positions';
 
     getJob(): Promise<AxiosResponse<Job[]>> {
-        return axios.get('https://jobs.github.com/positions.json?description=&location=');
+        return axios.get(this.url + '.json?description=&location=');
     }
 
     getJobBySearch(job: string, city: string): Promise<AxiosResponse<Job[]>> {
-        return axios.get('https://jobs.github.com/positions.json?description='+ job +'&location=' + city);
+        return axios.get(this.url + '.json?description='+ job +'&location=' + city);
     }
     getDetailJob(id: string): Promise<AxiosResponse<Job>> {
-        return axios.get('https://jobs.github.com/positions/'+ id +'.json');
+        return axios.get(this.url + '/'+ id +'.json');
     }
 }

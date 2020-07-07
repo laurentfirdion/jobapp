@@ -14,7 +14,7 @@ export default class UserData {
     postFavoris(favoris: Favoris): Promise<AxiosResponse<AddFavorisTypeReturn>> {
         return axios.post('https://jobapp-5f708.firebaseio.com/favoris.json', favoris)
     }
-    deleteFavoris(favoris: string): Promise<AxiosResponse<any>> {
+    deleteFavoris(favoris: string): Promise<AxiosResponse<null>> {
         return axios.delete('https://jobapp-5f708.firebaseio.com/favoris/'+favoris+'.json')
     }
 
