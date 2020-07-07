@@ -16,6 +16,18 @@
         public job: string = "";
         public city: string = "";
 
+        created() {
+    
+            if(this.$route.query !== null) {
+                if(this.$route.query.k !== "") {
+                    this.job = (this.$route.query.k as string) 
+                }
+                if(this.$route.query.l !== "") {
+                    this.city = (this.$route.query.l as string)
+                }
+            }
+        }
+        
         send() {
             if(this.job !== "" || this.city !== "") {
                 this.sendInfo([this.job, this.city])

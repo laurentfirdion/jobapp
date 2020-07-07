@@ -18,6 +18,5 @@
   })
 
   export default class Serp extends Vue{
-     
   }
 </script>
