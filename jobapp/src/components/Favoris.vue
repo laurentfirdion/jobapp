@@ -3,7 +3,7 @@
             <h2>Mes offres favoris</h2>
                 <ul>
                     <li v-for="(favor, index) in favorItems" :key="index" :id="index">
-                         {{ favor.title}}  {{ favor.company}} <br/>
+                        <router-link :to="`/emplois/${favor.id}`">{{ favor.title}}</router-link><br/> {{ favor.company}} <br/>
                          {{ favor.location}}    
                          <b-button :id="favor.id" class="btn-sm btn-danger" @click="supprFavori">Supprimer</b-button>
                     </li>   
