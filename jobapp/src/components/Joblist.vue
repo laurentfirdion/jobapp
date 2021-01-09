@@ -79,7 +79,7 @@ export default class Joblist extends Vue {
     
   created() {
     
-    if(this.$route.query !== null) {
+    if(this.$route.query) {
          if(this.$route.query.k !== undefined && this.$route.query.k !== "") {
            this.k = (this.$route.query.k as string) 
          }

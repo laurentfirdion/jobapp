@@ -18,11 +18,11 @@
 
         created() {
     
-            if(this.$route.query !== null) {
-                if(this.$route.query.k !== "") {
+            if(this.$route.query) {
+                if(this.$route.query.k !== undefined && this.$route.query.k !== "") {
                     this.job = (this.$route.query.k as string) 
                 }
-                if(this.$route.query.l !== "") {
+                if(this.$route.query.l !== undefined && this.$route.query.l !== "") {
                     this.city = (this.$route.query.l as string)
                 }
             }
